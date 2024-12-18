@@ -1,12 +1,19 @@
 import { assertType, TypeEq } from "./utils/test";
 
-type Zero = [];
-type TypeNumber = 0[];
+export type Zero = [];
+export type TypeNumber = 0[];
 
 type Next<N extends TypeNumber> = [0, ...N];
 type Prev<N extends TypeNumber> = N extends [0, ...infer Rest] ? Rest : Zero;
 
 type NumToLiteral<N extends TypeNumber> = N["length"];
+
+type LiteralToNum<N extends number> = _LiteralToNum<N, Zero>;
+
+type _LiteralToNum<
+  L extends number,
+  N extends TypeNumber
+> = L extends NumToLiteral<N> ? N : _LiteralToNum<L, Next<N>>;
 
 type Add<A extends TypeNumber, B extends TypeNumber> = A extends Zero
   ? B
@@ -20,9 +27,9 @@ type Mul<A extends TypeNumber, B extends TypeNumber> = A extends Zero
   ? Zero
   : Add<A, Mul<A, Prev<B>>>;
 
-type One = Next<Zero>;
-type Two = Next<One>;
-type Three = Next<Two>;
+export type One = Next<Zero>;
+export type Two = Next<One>;
+export type Three = Next<Two>;
 
 type AlsoOne = Prev<Two>;
 
